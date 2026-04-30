@@ -256,6 +256,7 @@ public partial class SentakkiSelectionHandler : EditorSelectionHandler
 
         var selectedSlideBodies = selectedItems.OfType<Slide>().SelectMany(s => s.SlideInfoList);
         breakSlideTernaryState.Value = GetStateFromSelection(selectedSlideBodies, s => s.Break);
+        exSlideTernaryState.Value = GetStateFromSelection(selectedSlideBodies, s => s.Ex);
 
         var selectedSlides = selectedItems.OfType<Slide>();
         omitSlideTapTypeTernaryState.Value = GetStateFromSelection(selectedSlides, s => s.TapType == Slide.TapTypeEnum.None);
