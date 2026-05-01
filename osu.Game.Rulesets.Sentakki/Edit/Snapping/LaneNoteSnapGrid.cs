@@ -1,5 +1,6 @@
 
 using System;
+using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
@@ -8,6 +9,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Pooling;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Utils;
+using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Rulesets.Sentakki.Extensions;
@@ -120,6 +122,7 @@ public partial class LaneNoteSnapGrid : VisibilityContainer
                 continue;
 
             var timingPoint = timingPoints[i];
+            double timingPointEndTime = timingPoints.ElementAtOrDefault(i + 1)?.Time ?? double.MaxValue;
 
             if (timingPoint.Time > maximumTime)
                 return;
@@ -130,7 +133,7 @@ public partial class LaneNoteSnapGrid : VisibilityContainer
             {
                 double beatTime = timingPoint.Time + beatIndex * beatLength;
 
-                if (beatTime > maximumTime)
+                if (beatTime > maximumTime || beatTime > timingPointEndTime)
                     break;
 
                 if (beatTime <= currentTime)
