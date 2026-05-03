@@ -84,7 +84,7 @@ public partial class HoldSelectionBlueprint : SentakkiSelectionBlueprint<Hold, D
         var localMousePosition = ToLocalSpace(screenSpacePosition) - OriginPosition;
 
         double currentStartTime = Item.StartTime;
-        double currentEndTime = snapGrid.GetSnappedTimeAndPosition(Item.StartTime, localMousePosition).snappedTime;
+        double currentEndTime = snapGrid.GetSnappedTimeAndPosition(Item.EndTime, localMousePosition).snappedTime;
 
         Item.StartTime = Math.Min(currentStartTime, currentEndTime);
         Item.EndTime = Math.Max(currentEndTime, currentStartTime);
