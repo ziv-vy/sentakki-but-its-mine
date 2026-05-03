@@ -102,8 +102,19 @@ public partial class HoldSelectionBlueprint : SentakkiSelectionBlueprint<Hold, D
 
     private partial class DraggableDotPiece : DotPiece
     {
+        [Resolved]
+        private LaneNoteSnapGrid snapGrid { get; set; } = null!;
+
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
-            => IsDragged || base.ReceivePositionalInputAt(screenSpacePos);
+        {
+            if (snapGrid.State.Value is Visibility.Hidden)
+                return false;
+
+            if (IsDragged)
+                return true;
+
+            return base.ReceivePositionalInputAt(screenSpacePos);
+        }
 
         [Resolved]
         private SentakkiBlueprintContainer blueprintContainer { get; set; } = null!;
