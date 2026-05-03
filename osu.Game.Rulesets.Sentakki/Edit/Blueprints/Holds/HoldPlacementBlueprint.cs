@@ -101,13 +101,10 @@ public partial class HoldPlacementBlueprint : SentakkiPlacementBlueprint<Hold>
 
     protected override bool OnMouseDown(MouseDownEvent e)
     {
-        if (e.Button is not MouseButton.Left)
-            return base.OnMouseDown(e);
-
         switch (PlacementActive)
         {
             case PlacementState.Waiting:
-                if (!IsValidForPlacement)
+                if (!IsValidForPlacement || e.Button is not MouseButton.Left)
                     break;
 
                 BeginPlacement(IsValidForPlacement);
@@ -115,6 +112,9 @@ public partial class HoldPlacementBlueprint : SentakkiPlacementBlueprint<Hold>
                 return true;
 
             case PlacementState.Active:
+                if (e.Button is not (MouseButton.Left or MouseButton.Right))
+                    break;
+
                 EndPlacement(true);
                 return true;
         }

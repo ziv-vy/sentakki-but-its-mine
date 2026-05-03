@@ -78,25 +78,25 @@ public partial class TouchHoldPlacementBlueprint : SentakkiPlacementBlueprint<To
 
     protected override bool OnMouseDown(MouseDownEvent e)
     {
-        if (e.Button is not MouseButton.Left)
-            return base.OnMouseDown(e);
-
         switch (PlacementActive)
         {
             case PlacementState.Waiting:
-                if (!IsValidForPlacement)
+                if (!IsValidForPlacement || e.Button is not MouseButton.Left)
                     break;
 
-                BeginPlacement(true);
+                BeginPlacement(IsValidForPlacement);
                 commitStartTime = HitObject.StartTime;
-                break;
+                return true;
 
             case PlacementState.Active:
+                if (e.Button is not (MouseButton.Left or MouseButton.Right))
+                    break;
+
                 EndPlacement(true);
-                break;
+                return true;
         }
 
-        return true;
+        return base.OnMouseDown(e);
     }
 
     protected override void OnMouseUp(MouseUpEvent e)
