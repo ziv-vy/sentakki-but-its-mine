@@ -84,7 +84,7 @@ public partial class HoldSelectionBlueprint : SentakkiSelectionBlueprint<Hold, D
         var localMousePosition = ToLocalSpace(screenSpacePosition) - OriginPosition;
 
         double currentStartTime = Item.StartTime;
-        double currentEndTime = snapGrid.GetSnappedTimeAndPosition(Item.StartTime, localMousePosition).snappedTime;
+        double currentEndTime = snapGrid.GetSnappedTimeAndPosition(Item.EndTime, localMousePosition).snappedTime;
 
         Item.StartTime = Math.Min(currentStartTime, currentEndTime);
         Item.EndTime = Math.Max(currentEndTime, currentStartTime);
@@ -102,8 +102,19 @@ public partial class HoldSelectionBlueprint : SentakkiSelectionBlueprint<Hold, D
 
     private partial class DraggableDotPiece : DotPiece
     {
+        [Resolved]
+        private LaneNoteSnapGrid snapGrid { get; set; } = null!;
+
         public override bool ReceivePositionalInputAt(Vector2 screenSpacePos)
-            => IsDragged || base.ReceivePositionalInputAt(screenSpacePos);
+        {
+            if (snapGrid.State.Value is Visibility.Hidden)
+                return false;
+
+            if (IsDragged)
+                return true;
+
+            return base.ReceivePositionalInputAt(screenSpacePos);
+        }
 
         [Resolved]
         private SentakkiBlueprintContainer blueprintContainer { get; set; } = null!;
